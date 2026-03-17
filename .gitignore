@@ -1,0 +1,25 @@
+# Environment and secrets
+.env
+.env.*
+*.pem
+*.key
+*.pfx
+*.p12
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node (if MCP servers are run locally)
+node_modules/
+
+# Docker
+.docker/
+
+# IDE
+.idea/
+*.swp
+*.swo
+
+# Azure
+.azure/
