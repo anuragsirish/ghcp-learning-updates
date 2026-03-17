@@ -1,0 +1,10 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8080:80"
+    volumes:
+      - ./hackathon.html:/usr/share/nginx/html/index.html:ro
+      - ./hackathon.html:/usr/share/nginx/html/hackathon.html:ro
+      - ./agenda.json:/usr/share/nginx/html/agenda.json:ro
+    restart: unless-stopped

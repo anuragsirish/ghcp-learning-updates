@@ -129,16 +129,105 @@ An expert agent for designing, building, and deploying GitHub Copilot agentic wo
 
 ---
 
+## 🐳 Docker
+
+### Build and Run Locally
+
+```bash
+# Build the image
+docker build -t ghcp-hackathon .
+
+# Run the container
+docker run -p 8080:80 ghcp-hackathon
+
+# Open http://localhost:8080
+```
+
+### Development with Docker Compose
+
+```bash
+# Start with live file mounting (no rebuild needed for content changes)
+docker compose up
+
+# Open http://localhost:8080
+# Edit hackathon.html or agenda.json — refresh browser to see changes
+```
+
+---
+
+## ☁️ Azure Deployment
+
+The site deploys to **Azure Container Apps** (Consumption tier) with **Azure Container Registry** (Basic SKU) for ~$5-7/month.
+
+### Architecture
+
+| Resource | SKU | ~Cost/mo |
+|----------|-----|----------|
+| Azure Container Registry | Basic | $5 |
+| Azure Container Apps | Consumption | $0-2 |
+| Log Analytics Workspace | Free tier | $0 |
+| **Total** | | **~$5-7** |
+
+### Deploy
+
+```bash
+# Prerequisites: Azure CLI, Docker, and an Azure subscription
+
+# One-command deploy
+./deploy.sh
+
+# Or specify custom values
+./deploy.sh <resource-group> <location> <acr-name> <image-tag>
+```
+
+### Manual Deploy Steps
+
+```bash
+# 1. Create resource group
+az group create --name ghcp-hackathon-rg --location eastus2
+
+# 2. Deploy infrastructure
+az deployment group create \
+  --resource-group ghcp-hackathon-rg \
+  --template-file infra/main.bicep \
+  --parameters baseName=ghcp-hackathon
+
+# 3. Build and push image
+az acr login --name ghcphackathonacr
+docker build -t ghcphackathonacr.azurecr.io/hackathon:latest .
+docker push ghcphackathonacr.azurecr.io/hackathon:latest
+
+# 4. Update container app
+az containerapp update \
+  --name ghcp-hackathon-app \
+  --resource-group ghcp-hackathon-rg \
+  --image ghcphackathonacr.azurecr.io/hackathon:latest
+```
+
+---
+
 ## 📁 Repository Structure
 
 ```
 ghcp-learning-updates/
-├── hackathon.html                             # Interactive slide deck
-├── AGENTS.md                                  # Agent instructions for Copilot in this repo
-├── README.md                                  # This file
+├── hackathon.html                          # Interactive slide deck
+├── agenda.json                             # Hackathon schedule config
+├── Dockerfile                              # nginx:alpine container
+├── nginx.conf                              # Custom nginx configuration
+├── docker-compose.yml                      # Local dev with live reload
+├── deploy.sh                               # One-command Azure deploy
+├── README.md                               # This file
+├── AGENTS.md                               # Copilot agent instructions
+├── infra/                                  # Azure infrastructure (Bicep)
+│   ├── main.bicep                          # Main orchestration
+│   ├── main.bicepparam                     # Default parameters
+│   └── modules/
+│       ├── acr.bicep                       # Container Registry
+│       ├── container-app.bicep             # Container Apps + environment
+│       └── log-analytics.bicep             # Log Analytics workspace
 └── .github/
     └── workflows/
-        └── docs-research-updater.md           # Agentic workflow definition
+        └── docs-research-updater.md        # Agentic workflow source
 ```
 
 ---
@@ -152,6 +241,8 @@ ghcp-learning-updates/
 | **[GitHub CLI (`gh`)](https://cli.github.com/)** | Running agentic workflows |
 | **[`gh-aw` extension](https://github.com/github/gh-aw)** | Compiling & running agentic workflows |
 | **GitHub Copilot CLI** | Using the `agentic-workflows-builder` agent in terminal |
+| [Docker](https://www.docker.com/) | Container builds | Docker, Azure deploy |
+| [Azure CLI](https://learn.microsoft.com/cli/azure/) | Azure resource management | Azure deploy |
 
 ---
 
