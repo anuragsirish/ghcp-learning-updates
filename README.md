@@ -32,9 +32,9 @@ The repo also includes an **agentic workflow** that automatically researches the
 git clone <repo-url> && cd ghcp-learning-updates
 
 # Open the slide deck
-open hackathon.html        # macOS
-start hackathon.html       # Windows
-xdg-open hackathon.html    # Linux
+open site/hackathon.html        # macOS
+start site/hackathon.html       # Windows
+xdg-open site/hackathon.html    # Linux
 ```
 
 ### ⌨️ Keyboard Navigation
@@ -150,7 +150,7 @@ docker run -p 8080:80 ghcp-hackathon
 docker compose up
 
 # Open http://localhost:8080
-# Edit hackathon.html or agenda.json — refresh browser to see changes
+# Edit site/hackathon.html or site/agenda.json — refresh browser to see changes
 ```
 
 ---
@@ -210,14 +210,9 @@ az containerapp update \
 
 ```
 ghcp-learning-updates/
-├── hackathon.html                          # Interactive slide deck
-├── agenda.json                             # Hackathon schedule config
-├── Dockerfile                              # nginx:alpine container
-├── nginx.conf                              # Custom nginx configuration
-├── docker-compose.yml                      # Local dev with live reload
-├── deploy.sh                               # One-command Azure deploy
-├── README.md                               # This file
-├── AGENTS.md                               # Copilot agent instructions
+├── site/                                   # Static site content (served by nginx)
+│   ├── hackathon.html                      # Interactive slide deck
+│   └── agenda.json                         # Hackathon schedule config
 ├── infra/                                  # Azure infrastructure (Bicep)
 │   ├── main.bicep                          # Main orchestration
 │   ├── main.bicepparam                     # Default parameters
@@ -225,9 +220,15 @@ ghcp-learning-updates/
 │       ├── acr.bicep                       # Container Registry
 │       ├── container-app.bicep             # Container Apps + environment
 │       └── log-analytics.bicep             # Log Analytics workspace
-└── .github/
-    └── workflows/
-        └── docs-research-updater.md        # Agentic workflow source
+├── .github/
+│   └── workflows/
+│       └── docs-research-updater.md        # Agentic workflow source
+├── Dockerfile                              # nginx:alpine container
+├── nginx.conf                              # Custom nginx configuration
+├── docker-compose.yml                      # Local dev with live reload
+├── deploy.sh                               # One-command Azure deploy
+├── AGENTS.md                               # Copilot agent instructions
+└── README.md                               # This file
 ```
 
 ---
@@ -252,7 +253,7 @@ Contributions to keep this resource current are welcome!
 
 ### Adding or Updating Slides
 
-1. Open `hackathon.html` in a text editor
+1. Open `site/hackathon.html` in a text editor
 2. Each slide is a `<section>` element — add new slides following the existing pattern
 3. Update the section navigation pills if adding a new section
 4. Test in a browser to verify layout and transitions

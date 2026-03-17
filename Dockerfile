@@ -1,9 +1,9 @@
 FROM nginx:alpine
 
 # Copy static site files
-COPY hackathon.html /usr/share/nginx/html/index.html
-COPY hackathon.html /usr/share/nginx/html/hackathon.html
-COPY agenda.json /usr/share/nginx/html/agenda.json
+COPY site/hackathon.html /usr/share/nginx/html/index.html
+COPY site/hackathon.html /usr/share/nginx/html/hackathon.html
+COPY site/agenda.json /usr/share/nginx/html/agenda.json
 
 # Copy custom nginx config for SPA-friendly serving
 COPY nginx.conf /etc/nginx/conf.d/default.conf
